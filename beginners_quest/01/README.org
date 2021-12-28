@@ -1,0 +1,48 @@
+Looks like it gives you the password in JavaScript code.
+
+I put the code that checks the password in relevant\under{}code.txt
+
+This is the pipeline I used to get the final code:
+#+BEGIN_EXAMPLE
+joseph@joseph-ThinkPad-E580:~/google-ctf-2021-solutions/beginners_quest/01$ for((i=0;i<12;i++)); do int=$(grep -P "p\[${i}\] === " ./relevant_code.txt | grep -oP '[0-9]{5}'); echo "int = ${int}, char = $((int - 51966)) = $(echo $((int-51966)) | awk '{ printf("%c",$0); }')"; done
+int = 52037, char = 71 = G
+int = 52077, char = 111 = o
+int = 52077, char = 111 = o
+int = 52066, char = 100 = d
+int = 52046, char = 80 = P
+int = 52063, char = 97 = a
+int = 52081, char = 115 = s
+int = 52081, char = 115 = s
+int = 52085, char = 119 = w
+int = 52077, char = 111 = o
+int = 52080, char = 114 = r
+int = 52066, char = 100 = d
+joseph@joseph-ThinkPad-E580:~/google-ctf-2021-solutions/beginners_quest/01$ 
+#+END_EXAMPLE
+
+Password: GoodPassword
+
+After entering this I saw "CTF{IJustHopeThisIsNotOnShodan}" on the next page.
+
+Here's an alternative pipeline using a bit more awk for parsing logic:
+
+#+BEGIN_EXAMPLE
+joseph@joseph-ThinkPad-E580:~/google-ctf-2021-solutions/beginners_quest/01$ grep -oP 'p\[[0-9]+\] === [0-9]{5}' relevant_code.txt | awk '{x=int($3)-51966; match($1, /[0-9]+/, arr); printf "p[%02d] = %c\n", arr[0], x}' | sort -k 1
+p[00] = G
+p[01] = o
+p[02] = o
+p[03] = d
+p[04] = P
+p[05] = a
+p[06] = s
+p[07] = s
+p[08] = w
+p[09] = o
+p[10] = r
+p[11] = d
+joseph@joseph-ThinkPad-E580:~/google-ctf-2021-solutions/beginners_quest/01$ 
+#+END_EXAMPLE
+
+I think the pure bash solution is better here. Awk is best suited for processing
+tabular data which I did not have to start with. Not sure which solution is more
+robust here, but was good for awk practice.

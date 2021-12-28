@@ -1,0 +1,45 @@
+Tried a solution using a C program to simulate these gates with some int bitwise
+operations. Couldn't seem to get it to work, saw some suggestions online to use
+"backtracking", that's what solved it for me.
+
+Work from the start, assume everything in the output is "true", then work your
+way back with this assumption, recursively labeling the ops as true or false. If
+you make it back to the start and the result for the letter is "true" then
+include it, exclude the letter if "false".
+
+Example:
+
+Output = A AND not B
+
+My result would be "A". I assume the result of the AND operation is true,
+starting with "AB" but there is a not in front of B so as I continue
+backtracking I have to eliminate it and label "B" as false. This is how I
+backtracked on paper to solve this challenge.
+
+Backtracking is correct because the output was set to 1. Meaning we are given
+the outputs but not the inputs. The technical solution would have been using a
+logic gate solver like logism or simulating the gate with an integer and listing
+out the truth table. I did end up doing this too in a python script here,
+creating a CSV file with only 1 result where the output was true:
+
+False,True,True,False,False,True,False,False,True,True,True
+
+To show a bit more clearly:
+
+| A     | B    | C    | D     | E     | F    | G     | H     | I    | J    | Output |
+|-------+------+------+-------+-------+------+-------+-------+------+------+--------|
+| False | True | True | False | False | True | False | False | True | True | True   |
+
+Or with some help from awk:
+
+#+BEGIN_EXAMPLE
+joseph@joseph-ThinkPad-E580:~/google-ctf-2021-solutions/beginners_quest/02$ awk 'BEGIN {FS=","} {if($11 == "True") {printf "CTF{"; for(i=1;i<11;i++) if($i == "True") {printf "%c", 64+i}; printf "}\n"}}' truth_table.csv 
+CTF{BCFIJ}
+joseph@joseph-ThinkPad-E580:~/google-ctf-2021-solutions/beginners_quest/02$ 
+#+END_EXAMPLE
+
+
+Flag: CTF{BCFIJ}
+
+You choose on or the other challenge next, 04 makes more sense. Inspect the
+apartment.
